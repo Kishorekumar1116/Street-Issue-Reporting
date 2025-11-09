@@ -4,32 +4,22 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Street Issues — Admin View</title>
+    <title>Street Issues — Public Reporting</title>
     <link rel="icon" type="image/png" href="./logo.jpeg" />
     <style>
+        /* Keep all your original CSS exactly as in your current code */
         :root {
-            --bg: #f1b900;
-            --card: #ffffff;
+            --bg: #ffd727;
+            --card: #fcfcfc;
             --accent: #efff13;
             --muted: #af0000;
             --danger: #a80000;
             --success: #facc15;
-            --max-width: 900px;
+            --max-width: 1000px;
             --radius: 12px;
             --shadow: 0 6px 18px rgba(223, 7, 7, 0.952);
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         }
-
-
-        #reportsList {
-  overflow-x: auto; /* allow horizontal scroll */
-}
-
-#reportsList table {
-  width: 100%;
-  min-width: 800px; /* ensures table is readable on smaller screens */
-  border-collapse: collapse;
-}
 
         * {
             box-sizing: border-box;
@@ -39,61 +29,128 @@
         body {
             height: 100%;
             margin: 0;
+            background: linear-gradient(180deg, #cc0303 0%, var(--bg) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
-            background: linear-gradient(180deg, #cc0202 0%, var(--bg) 100%);
-            font-family: inherit;
+            color: #0f172a;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
             width: 100%;
             max-width: var(--max-width);
-            margin: 0 auto;
             background: var(--card);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 20px;
+            overflow: hidden;
+            
+            min-height: 460px;
+        }
+
+        .left {
+            padding: 32px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #e21809);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
         }
 
         h1 {
-            margin-top: 0;
+            margin: 0;
+            font-size: 20px;
         }
 
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            overflow-x: auto;
-            margin-top: 12px;
-        }
-
-        .table th,
-        .table td {
-            padding: 10px;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
-            text-align: left;
-            white-space: nowrap;
-            max-width: 220px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .table th {
-            font-size: 13px;
+        p.lead {
+            margin: 6px 0 18px;
             color: var(--muted);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(15, 23, 42, 0.04);
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .step {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            color: var(--muted);
+            background: rgba(15, 23, 42, 0.03);
+        }
+
+        .step.active {
+            background: linear-gradient(90deg, var(--accent), #db0000);
+            color: white;
             font-weight: 600;
         }
 
-        .admin-photo {
-            max-width: 80px;
-            border-radius: 6px;
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #111827;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 14px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 8px;
         }
 
         .btn.primary {
@@ -101,132 +158,266 @@
             color: white;
         }
 
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
         .btn.danger {
             background: var(--danger);
             color: white;
         }
 
-        .small {
-            font-size: 13px;
-            color: var(--muted);
-            margin-top: 8px;
-            display: block;
+        .photo-preview {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
         }
 
-        #adminArea {
+        .thumb {
+            width: 100%;
+            max-width: 120px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        .right {
             display: none;
-            margin-top: 20px;
+        }
+
+        /* hide right panel on user page */
+        @media (max-width:1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Admin — Street Issues Reports (S.Kishore Kumar) Ward-10 BLA TVK </h1>
+        <div class="left">
+            <header>
+                <div class="logo">SI</div>
+                <div>
+                    <h1>Street Issues — Public Reporting</h1>
+                    <p class="lead">Quickly report problems in your area</p>
+                </div>
+            </header>
+            <div class="card" id="formCard">
+                <div class="step-indicator" aria-hidden="true">
+                    <div class="step active" data-step="1">1. Contact</div>
+                    <div class="step" data-step="2">2. Complaint</div>
+                    <div class="step" data-step="3">3. Submit</div>
+                </div>
 
-        <label>Admin password:</label>
-        <input type="password" id="adminPassword" placeholder="Enter admin password" />
-        <button id="adminLogin" class="btn primary">Login</button>
-      
-        <div id="adminArea">
-            <h3>Reports</h3>
-            <div id="noReports" class="small">No reports yet.</div>
-            <div id="reportsList"></div>
-            <button id="clearAll" class="btn danger">Clear All Reports</button>
+                <!-- User Form -->
+                <form id="reportForm" autocomplete="off">
+                    <!-- Step 1 -->
+                    <div id="step1">
+                        <label for="name">Full name</label>
+                        <input id="name" type="text" placeholder="Your full name" required />
+                        <label for="mobile" style="margin-top:12px">Mobile number</label>
+                        <input id="mobile" type="tel" placeholder="e.g. +91 98XXXXXXXX" pattern="[\d +()-]{7,}"
+                            required />
+                        <div style="margin-top:12px">
+                            <label>Location <span style="color:red">*</span> (required)</label>
+                            <div style="display:flex;gap:10px;align-items:center">
+                                <button type="button" id="getLocationBtn" class="btn ghost">Turn on location</button>
+                                <div id="locStatus" class="muted">Location not enabled</div>
+                            </div>
+                            <div class="muted">Please allow location access when the browser prompts.</div>
+                        </div>
+                        <div class="actions">
+                            <div style="flex:1"></div>
+                            <button type="button" id="toStep2" class="btn primary">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div id="step2" style="display:none">
+                        <label for="issueType">Issue type</label>
+                        <select id="issueType" required>
+                            <option value="">Select issue type</option>
+                            <option value="Light">Street Light</option>
+                            <option value="Garbage">Garbage / Dumping</option>
+                            <option value="Streetlight">- Drainage</option>
+                            <option value="WaterSupply">- Water Supply</option>
+                            <option value="Road">Road</option>
+                            <option value="Tree">Tree / Environment</option>
+                            <option value="Safety">Safety</option>
+                            <option value="Health Issue">Health Issue</option>
+                            <option value="Animal Issue">Animal Issues</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <label for="desc" style="margin-top:12px">Description</label>
+                        <textarea id="desc" placeholder="Add more details (landmark, severity, etc.)"
+                            required></textarea>
+                        <label style="margin-top:12px">Attach photo (optional)</label>
+                        <input id="photoInput" type="file" accept="image/*" />
+                        <div class="photo-preview" id="photoPreview"></div>
+                        <div class="actions">
+                            <button type="button" id="backTo1" class="btn ghost">Back</button>
+                            <button type="button" id="toStep3" class="btn primary">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div id="step3" style="display:none">
+                        <h3 style="margin-top:0">Review your report</h3>
+                        <div style="display:grid;gap:8px;font-size:14px">
+                            <div><strong>Name:</strong> <span id="rName"></span></div>
+                            <div><strong>Mobile:</strong> <span id="rMobile"></span></div>
+                            <div><strong>Location:</strong> <span id="rLoc">Not provided</span></div>
+                            <div><strong>Issue:</strong> <span id="rIssue"></span></div>
+                            <div><strong>Description:</strong> <span id="rDesc"></span></div>
+                            <div id="rPhotoWrap" style="display:none"><strong>Photo:</strong><br /><img id="rPhoto"
+                                    class="thumb" alt="attached photo" /></div>
+                        </div>
+                        <div class="actions">
+                            <button type="button" id="backTo2" class="btn ghost">Back</button>
+                            <button type="submit" id="submitBtn" class="btn primary">Submit Report</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Success -->
+                <div id="success" style="display:none;margin-top:12px;text-align:center">
+                    <h2 style="margin:8px 0;color:var(--success)">Report Submitted</h2>
+                    <p class="muted">Thank you — your report has been recorded. Reference ID: <span id="refId"></span>
+                    </p>
+                    <div style="margin-top:12px">
+                        <button id="newReport" class="btn ghost">Report another issue</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-     
+
     <script>
+        // Keep all your current JS for location, steps, photo compression, and form submission
+        // Remove admin-related code completely
         const STORAGE_KEY = 'street_issues_reports_v1';
-        const ADMIN_PASSWORD = 'Kishore@10';
+        let currentStep = 1;
+        let userLocation = null;
+        let attachedPhotoBase64 = null;
 
-        const adminPassword = document.getElementById('adminPassword');
-        const adminLogin = document.getElementById('adminLogin');
-        const adminArea = document.getElementById('adminArea');
-        const reportsList = document.getElementById('reportsList');
-        const noReports = document.getElementById('noReports');
-        const clearAllBtn = document.getElementById('clearAll');
+        // elements
+        const steps = Array.from(document.querySelectorAll('.step'));
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const nameInput = document.getElementById('name');
+        const mobileInput = document.getElementById('mobile');
+        const getLocationBtn = document.getElementById('getLocationBtn');
+        const locStatus = document.getElementById('locStatus');
+        const issueType = document.getElementById('issueType');
+        const desc = document.getElementById('desc');
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const toStep2 = document.getElementById('toStep2');
+        const toStep3 = document.getElementById('toStep3');
+        const backTo1 = document.getElementById('backTo1');
+        const backTo2 = document.getElementById('backTo2');
+        const rName = document.getElementById('rName');
+        const rMobile = document.getElementById('rMobile');
+        const rLoc = document.getElementById('rLoc');
+        const rIssue = document.getElementById('rIssue');
+        const rDesc = document.getElementById('rDesc');
+        const rPhotoWrap = document.getElementById('rPhotoWrap');
+        const rPhoto = document.getElementById('rPhoto');
+        const reportForm = document.getElementById('reportForm');
+        const successBox = document.getElementById('success');
+        const refId = document.getElementById('refId');
+        const newReportBtn = document.getElementById('newReport');
 
-        function loadReports() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : [];
-            } catch (e) {
-                console.error(e);
-                return [];
-            }
+        function setActiveStep(n) {
+            currentStep = n;
+            steps.forEach(s => s.classList.toggle('active', Number(s.getAttribute('data-step')) === n));
+            step1.style.display = n === 1 ? 'block' : 'none';
+            step2.style.display = n === 2 ? 'block' : 'none';
+            step3.style.display = n === 3 ? 'block' : 'none';
         }
 
-        function escapeHtml(s) {
-            if (!s) return '';
-            return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-        }
-
-        function renderAdmin() {
-    const list = loadReports();
-    reportsList.innerHTML = '';
-    if (!list.length) {
-        noReports.style.display = 'block';
-        return;
-    }
-    noReports.style.display = 'none';
-
-    const table = document.createElement('table');
-    table.className = 'table';
-
-    const thead = document.createElement('thead');
-    thead.innerHTML = `<tr>
-        <th>Ref</th><th>Name</th><th>Mobile</th><th>Type</th>
-        <th>Description</th><th>Location</th><th>Photo</th><th>Time</th><th>Solution</th>
-    </tr>`;
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-
-    for (const r of list) {
-        const tr = document.createElement('tr');
-        const locUrl = r.location
-            ? `https://www.google.com/maps?q=${r.location.lat},${r.location.lon}`
-            : null;
-        const timeText = new Date(r.ts).toLocaleString();
-
-        tr.innerHTML = `
-            <td><strong>${r.id}</strong></td>
-            <td>${escapeHtml(r.name)}</td>
-            <td>${escapeHtml(r.mobile)}</td>
-            <td>${escapeHtml(r.issueType)}</td>
-            <td style="max-width:220px">${escapeHtml(r.description || '')}</td>
-            <td>${locUrl ? `<a href="${locUrl}" target="_blank" style="padding:6px 10px; background:#efff13; color:#000; border-radius:6px; text-decoration:none;">View Map</a>` : 'N/A'}</td>
-            <td>${r.photo ? `<img class="admin-photo" src="${r.photo}" alt="photo"/>` : '—'}</td>
-            <td>${timeText}</td>
-            <td>
-                <button class="btn primary solution-btn" onclick="this.textContent='Completed'; this.style.backgroundColor='green'; this.style.color='white'; this.disabled=true;">Mark Completed</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    }
-
-    table.appendChild(tbody);
-    reportsList.appendChild(table);
-}
-
-
-        adminLogin.addEventListener('click', () => {
-            const p = adminPassword.value || '';
-            if (p !== ADMIN_PASSWORD) {
-                alert('Incorrect password');
-                return;
-            }
-            adminArea.style.display = 'block';
-            renderAdmin();
+        // Location
+        getLocationBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) { locStatus.textContent = 'Geolocation not supported'; return; }
+            locStatus.textContent = 'Requesting location...';
+            navigator.geolocation.getCurrentPosition(pos => {
+                userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+                const lat = userLocation.lat.toFixed(4), lon = userLocation.lon.toFixed(4);
+                locStatus.innerHTML = `Got location: ${lat}, ${lon} <a href="https://www.google.com/maps?q=${lat},${lon}" target="_blank" style="color:#2563eb;text-decoration:underline;margin-left:5px">View on Map</a>`;
+            }, err => { locStatus.textContent = 'Location blocked/unavailable'; }, { enableHighAccuracy: true, timeout: 10000 });
         });
 
-        clearAllBtn.addEventListener('click', () => {
-            if (!confirm('Delete all reports from this browser (localStorage)?')) return;
-            localStorage.removeItem(STORAGE_KEY);
-            renderAdmin();
-            alert('All reports cleared locally.');
+        // Photo handling
+        photoInput.addEventListener('change', e => {
+            const file = e.target.files[0];
+            photoPreview.innerHTML = ''; attachedPhotoBase64 = null;
+            if (!file || !file.type.startsWith('image/')) return alert('Please select image.');
+            const reader = new FileReader();
+            reader.onload = e2 => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    const maxWidth = 400;
+                    const scale = Math.min(1, maxWidth / img.width);
+                    canvas.width = img.width * scale; canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    attachedPhotoBase64 = canvas.toDataURL("image/jpeg", 0.6);
+                    const previewImg = document.createElement("img");
+                    previewImg.src = attachedPhotoBase64; previewImg.className = "thumb"; previewImg.alt = "compressed photo";
+                    photoPreview.appendChild(previewImg);
+                }; img.src = e2.target.result;
+            }; reader.readAsDataURL(file);
         });
+
+        // Step navigation
+        toStep2.addEventListener('click', () => { if (!nameInput.value.trim()) return alert('Enter name'); if (!mobileInput.value.trim()) return alert('Enter mobile'); setActiveStep(2); });
+        backTo1.addEventListener('click', () => setActiveStep(1));
+        toStep3.addEventListener('click', () => {
+            if (!issueType.value) return alert('Select issue');
+            if (!desc.value.trim() && !confirm('No description. Submit anyway?')) return;
+            rName.textContent = nameInput.value.trim();
+            rMobile.textContent = mobileInput.value.trim();
+            rLoc.textContent = userLocation ? `${userLocation.lat.toFixed(5)}, ${userLocation.lon.toFixed(5)}` : 'Not provided';
+            rIssue.textContent = issueType.value;
+            rDesc.textContent = desc.value.trim() || '-';
+            if (attachedPhotoBase64) { rPhoto.src = attachedPhotoBase64; rPhotoWrap.style.display = 'block'; } else { rPhotoWrap.style.display = 'none'; }
+            setActiveStep(3);
+        });
+        backTo2.addEventListener('click', () => setActiveStep(2));
+
+        // Submit
+        reportForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const id = 'R' + Date.now().toString(36).toUpperCase().slice(-8);
+            const report = { id, name: nameInput.value.trim(), mobile: mobileInput.value.trim(), location: userLocation || null, issueType: issueType.value, description: desc.value.trim(), photo: attachedPhotoBase64 || null, ts: new Date().toISOString() };
+            const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            list.unshift(report); localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            refId.textContent = id;
+            reportForm.style.display = 'none'; successBox.style.display = 'block'; setActiveStep(3);
+        });
+
+        // New report
+        newReportBtn.addEventListener('click', () => {
+            reportForm.style.display = ''; successBox.style.display = 'none'; reportForm.reset();
+            photoPreview.innerHTML = ''; attachedPhotoBase64 = null; userLocation = null; locStatus.textContent = 'Location not enabled';
+            setActiveStep(1);
+        });
+
+        // initialize
+        setActiveStep(1);
     </script>
 </body>
 
