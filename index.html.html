@@ -1,75 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Street Issues Reporting</title>
   <link rel="icon" type="image/png" href="./logo.jpeg" />
   <style>
+    /* 🌆 Global Styles */
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: "Poppins", Arial, sans-serif;
       background-image: url('./TVK BG.png');
-      background-size: cover;       
-      background-position: center;  
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 20px;
+      
     }
 
+    /* 📦 Card Container */
     .card {
-      background-color: rgba(255, 255, 255, 0.9); /* semi-transparent white */
-      padding: 20px 40px;
+      background-color: rgba(255, 255, 255, 0.92);
+      padding: 40px;
       border-radius: 20px;
-      margin-top: 170px;
-      margin-left: 150px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
       text-align: center;
-      min-width: 300px;
+      max-width: 250px;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 200px;
+      margin-left: 130px;
     }
 
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* 🏷️ Title */
     .card h1 {
       margin-bottom: 30px;
-      font-size: 36px;
-      color: #333;
+      font-size: 2rem;
+      color: #222;
+      letter-spacing: 0.5px;
     }
 
-    .card button {
-      padding: 15px 40px;
-      margin: 10px;
-      font-size: 18px;
+    /* 🔘 Buttons */
+    button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 1rem;
+      font-weight: 600;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     .user-btn {
       background-color: #4caf50;
       color: white;
     }
+
     .user-btn:hover {
-      background-color: #45a049;
+      background-color: #43a047;
+      transform: translateY(-2px);
     }
 
     .admin-btn {
       background-color: #f44336;
       color: white;
     }
+
     .admin-btn:hover {
-      background-color: #da190b;
+      background-color: #d32f2f;
+      transform: translateY(-2px);
+    }
+
+    /* 📱 Tablet Responsive */
+    @media (max-width: 768px) {
+      .card {
+        padding: 30px 20px;
+        border-radius: 16px;
+        
+      }
+
+      .card h1 {
+        font-size: 1.7rem;
+      }
+
+      button {
+        font-size: 0.95rem;
+        padding: 12px;
+      }
+    }
+
+    /* 📱 Mobile Responsive */
+    @media (max-width: 480px) {
+      body {
+        background-image: url('./T1.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+        
+      }
+
+      .card {
+        padding: 25px 16px;
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        width: 100%;
+        max-width: 150px;
+        margin-top: 250px;
+        margin-right: 140px;
+      }
+
+      .card h1 {
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+      }
+
+      button {
+        font-size: 0.9rem;
+        padding: 12px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Fix My Street</h1>
-    <button class="user-btn" onclick="location.href='User.html'">Complaint Issues Users</button>
-    <button class="admin-btn" onclick="location.href='Admin.html'">Admin</button>
+    <button class="user-btn" onclick="location.href=' User.html'">
+      Complaint Issues (Users)
+    </button>
+    <button class="admin-btn" onclick="location.href='Admin.html'">
+      Admin
+    </button>
   </div>
 </body>
 </html>
